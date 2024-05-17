@@ -1,7 +1,7 @@
 class DataBaseError extends Error {
     constructor(message) {
         super(message);
-        this.message = 'Data base failed!'
+        this.message = 'Data base failed!';
     }
 }
 

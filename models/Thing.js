@@ -51,6 +51,7 @@ class Thing {
         // `);
 
         // return rows;
+        
         throw new DataBaseError();
     }
 
@@ -60,7 +61,7 @@ class Thing {
         // `);
 
         // return rows;
-        throw new DataBaseError();
+        throw new RangeError('Range error!');
     }
 
     static async updateByPk({ id, updateValues }) {

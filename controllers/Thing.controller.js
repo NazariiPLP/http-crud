@@ -19,11 +19,12 @@ module.exports.createThing = async (req, res, next) => {
 module.exports.getAllThings = async (req, res, next) => {
     try {
         const things = Thing.findAll();
+
         return res.status(200).send(things);
-    } catch (error) {
+    }   catch (error) {
         next (error);
     }
-}
+};
 
 module.exports.getOne = async (req, res, next) => {
     const {params: {id}} = req;
