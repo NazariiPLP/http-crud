@@ -1,64 +1,71 @@
-const Thing = require('../models/index');
+const { Thing } = require('../models/index');
+const NotFoundError = require('../errors/NotFoundError')
 
 module.exports.createThing = async (req, res, next) => {
-    const { body } = req;
-    try {
-        const createdThing = await Thing.create(body);
-        console.log(createdThing);
+  const { body } = req;
 
-        if(createdThing) {
-            return res.status(201).send(createdThing)
-        } else {
-            throw new ReferenceError('Reference Error! (createThing - controller');
-        }
-    } catch (error) {
-        next(error);
+  try {
+    const createdThing = await Thing.create(body);
+
+    if (createdThing) {
+      return res.status(201).send(createdThing);
+    } else {
+      throw new ReferenceError('Reference error');
     }
-}
-
-module.exports.getAllThings = async (req, res, next) => {
-    try {
-        const things = Thing.findAll();
-
-        return res.status(200).send(things);
-    }   catch (error) {
-        next (error);
-    }
+  } catch (error) {
+    next(error);
+  }
 };
 
-module.exports.getOne = async (req, res, next) => {
-    const {params: {id}} = req;
-    try {
-        const thing = await Thing.findByPk(id);
+module.exports.getAllThings = async (req, res, next) => {
+  try {
+    const things = await Thing.findAll();
 
-        // потенційно, тут могла бути перевірка, чи повернулись нам якісь значення
-        return res.status
-    } catch (error) {
-        next(error);
+    return res.status(200).send(things);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.getOne = async(req, res, next) => {
+  try {
+    const { params: {id} } = req;
+
+    const thing = await Thing.findByPk(id);
+
+    if(thing.length > 0) {
+      return res.status(200).send(thing);
+    } else {
+      throw new NotFoundError();
     }
+
+  } catch (error) {
+    next(error);
+  }
 }
 
-module.exports.updateOne = async (req, res, next) => {
+module.exports.updateOne = async(req, res, next) => {
+  try {
     const {params: {id}, body} = req;
-    try {
-        await Thing.updateByPk({
-            id: Number(id),
-            updatedValues: body
-        });
+    const updated = await Thing.updateByPk({
+      id,
+      updateValues: body
+    });
 
-        return res.status(200).send(updated);
-    } catch (error) {
-        next(error);
-    }
+    return res.status(200).send(updated);
+  } catch (error) {
+    next(error);
+  }
 }
 
-module.exports.deleteOne = async (req, res, next) => {
+module.exports.deleteOne = async(req, res, next) => {
+  try {
     const {params: {id}} = req;
 
-    try {
-        const deletedThing = await Thing.deleteByPk(id);
-        return res.staturs(200).send(deletedThing);
-    } catch (error) {
-        next(error);
-    }
+    const deleted = await Thing.deleteByPk(id);
+
+    return res.status(200).send(deleted);
+  } catch (error) {
+    next(error);
+  }
 }

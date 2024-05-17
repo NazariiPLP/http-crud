@@ -1,5 +1,6 @@
 const DataBaseError = require("./errors/DataBaseError");
 const { ValidationError } = require('yup');
+const NotFoundError = require('./errors/NotFoundError');
 
 module.exports.basicErrorHandler = (err, req, res, next) => { // ОБРОБНИК ПОМИЛОК
     if(err instanceof DataBaseError) {
@@ -16,5 +17,9 @@ module.exports.basicErrorHandler = (err, req, res, next) => { // ОБРОБНИ�
 
     if(err instanceof ValidationError) {
      return res.status(400).send(err.message);
+    }
+
+    if(err instanceof NotFoundError) {
+     return res.status(404).send(err.message);
     }
 }
